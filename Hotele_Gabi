@@ -1,0 +1,672 @@
+USE [master]
+GO
+/****** Object:  Database [Hotele_Gabi]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE DATABASE [Hotele_Gabi]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'Hotele_Gabi', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.GKSQL\MSSQL\DATA\Hotele_Gabi.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'Hotele_Gabi_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.GKSQL\MSSQL\DATA\Hotele_Gabi_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+GO
+ALTER DATABASE [Hotele_Gabi] SET COMPATIBILITY_LEVEL = 140
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [Hotele_Gabi].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [Hotele_Gabi] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [Hotele_Gabi] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [Hotele_Gabi] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [Hotele_Gabi] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [Hotele_Gabi] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [Hotele_Gabi] SET  MULTI_USER 
+GO
+ALTER DATABASE [Hotele_Gabi] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [Hotele_Gabi] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [Hotele_Gabi] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [Hotele_Gabi] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [Hotele_Gabi] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [Hotele_Gabi] SET QUERY_STORE = OFF
+GO
+USE [Hotele_Gabi]
+GO
+/****** Object:  Table [dbo].[hotele]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hotele](
+	[hotele_id] [int] IDENTITY(1,1) NOT NULL,
+	[hotele_nazwa] [varchar](30) NOT NULL,
+	[hotele_kraje_id] [int] NOT NULL,
+	[hotele_miasta_id] [int] NOT NULL,
+	[hotele_adres] [varchar](50) NOT NULL,
+	[hotele_gwiazdki] [int] NOT NULL,
+	[hotele_telefon] [varchar](20) NOT NULL,
+	[hotele_email] [varchar](50) NOT NULL,
+	[hotele_adres_www] [varchar](50) NOT NULL,
+ CONSTRAINT [PK__hotele__45FE7E2677F1612F] PRIMARY KEY CLUSTERED 
+(
+	[hotele_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[liczba_gwiazdek]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+	CREATE VIEW [dbo].[liczba_gwiazdek]
+AS 
+	SELECT 
+	 H.hotele_nazwa AS Nazwa
+    ,H.hotele_adres AS Adres
+    ,H.hotele_telefon AS Telefon
+	,H.hotele_gwiazdki AS gwiazdki
+	FROM Hotele H
+	WHERE
+    H.hotele_gwiazdki >= 3 AND H.hotele_gwiazdki <=5
+GO
+/****** Object:  Table [dbo].[klienci]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[klienci](
+	[klienci_id] [int] IDENTITY(1,1) NOT NULL,
+	[klienci_imie] [varchar](20) NOT NULL,
+	[klienci_nazwisko] [varchar](40) NOT NULL,
+	[klienci_kraje_id] [int] NOT NULL,
+	[klienci_miasta_id] [int] NOT NULL,
+	[klienci_ulica] [varchar](50) NOT NULL,
+	[klienci_numer_domu] [int] NOT NULL,
+	[klienci_nazwa_dokumentu] [varchar](20) NOT NULL,
+	[klienci_seria_dokumen] [varchar](3) NOT NULL,
+	[klienci_numer_dokumentu] [char](10) NOT NULL,
+	[klienci_numer_pesel] [char](11) NULL,
+	[klienci_plec] [varchar](1) NOT NULL,
+ CONSTRAINT [PK__klienci__1B59595C986FE677] PRIMARY KEY CLUSTERED 
+(
+	[klienci_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[płeć]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[płeć]
+AS
+SELECT klienci_imie, klienci_nazwisko, klienci_plec
+FROM klienci
+	WHERE 
+	Klienci.klienci_plec = 'k' ;
+    
+GO
+/****** Object:  Table [dbo].[kraje]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[kraje](
+	[kraje_id] [int] IDENTITY(1,1) NOT NULL,
+	[kraje_nazwa_kraju] [varchar](50) NOT NULL,
+ CONSTRAINT [PK__kraje__7DCF03BD86649D81] PRIMARY KEY CLUSTERED 
+(
+	[kraje_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[miasta]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[miasta](
+	[miasta_id] [int] IDENTITY(1,1) NOT NULL,
+	[miasta_nazwa] [varchar](50) NOT NULL,
+	[miasta_kod_pocztowy] [varchar](20) NOT NULL,
+	[miasta_wojewodztwo] [varchar](20) NOT NULL,
+ CONSTRAINT [PK__miasta__FFFF06F79B26493C] PRIMARY KEY CLUSTERED 
+(
+	[miasta_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[pokoje]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[pokoje](
+	[pokoje_id] [int] IDENTITY(1,1) NOT NULL,
+	[pokoje_hotele_id] [int] NOT NULL,
+	[pokoje_numer] [int] NOT NULL,
+	[pokoje_pietro] [int] NOT NULL,
+	[pokoje_ludzie] [int] NOT NULL,
+ CONSTRAINT [PK__pokoje__E988CEEAB49A11B6] PRIMARY KEY CLUSTERED 
+(
+	[pokoje_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[rezerwacje]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[rezerwacje](
+	[rezerwacje_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[rezerwacje_klienci_id] [int] NOT NULL,
+	[rezerwacje_zameldowanie] [date] NOT NULL,
+	[rezerwacje_wymeldowanie] [date] NOT NULL,
+	[rezerwacje_pokoje_id] [int] NOT NULL,
+	[rezerwacje_parking_id] [int] NULL,
+	[rezerwacje_czy_zrealizowano] [bit] NOT NULL,
+ CONSTRAINT [PK__rezerwac__A276CB15B2798B6A] PRIMARY KEY CLUSTERED 
+(
+	[rezerwacje_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[zlozone]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[zlozone]
+AS
+SELECT TOP (6) K.kraje_nazwa_kraju AS Kraj, M.miasta_nazwa AS Miasto, H.hotele_id AS [Nazwa hotelu], COUNT(*) AS [Ilość złożonych rezerwacji]
+FROM   dbo.rezerwacje AS RE INNER JOIN
+             dbo.pokoje AS P ON RE.rezerwacje_pokoje_id = P.pokoje_id INNER JOIN
+             dbo.hotele AS H ON P.pokoje_hotele_id = H.hotele_id INNER JOIN
+             dbo.kraje AS K ON H.hotele_kraje_id = K.kraje_id INNER JOIN
+             dbo.miasta AS M ON H.hotele_miasta_id = M.miasta_id
+WHERE (RE.rezerwacje_czy_zrealizowano = 1)
+GROUP BY K.kraje_nazwa_kraju, M.miasta_nazwa, H.hotele_id
+ORDER BY [Ilość złożonych rezerwacji] DESC
+GO
+/****** Object:  View [dbo].[gwiazdki]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[gwiazdki]
+AS
+ SELECT 
+    CASE    
+        WHEN hotele_gwiazdki = 1 THEN 1
+        WHEN hotele_gwiazdki = 2 THEN 2
+        WHEN hotele_gwiazdki = 3 THEN 3 
+        WHEN hotele_gwiazdki = 4 THEN 4 
+        WHEN hotele_gwiazdki = 5 THEN 5 
+    END AS Liczba_gwiazdek
+    ,COUNT(*) AS Liczba_hoteli
+
+FROM
+    hotele
+        
+GROUP by
+    hotele_gwiazdki 
+GO
+/****** Object:  Table [dbo].[parking]    Script Date: 22/12/2019 12:21:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[parking](
+	[parking_id] [int] IDENTITY(1,1) NOT NULL,
+	[parking_hotele_id] [int] NOT NULL,
+	[parking_liczba] [int] NOT NULL,
+ CONSTRAINT [PK__parking__40AA4F4AE7C194B9] PRIMARY KEY CLUSTERED 
+(
+	[parking_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[hotele] ON 
+
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (1, N'MercuryA', 1, 1, N'Warszawa ul. Wiosenna 4', 4, N'48 786546786', N'mercura@jakas_domena.pl', N'www.mercuryA.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (2, N'MercuryAB', 2, 2, N'Poznan ul. Letnia 2', 5, N'48 976564567', N'mercuryAB@jakas_domena.pl', N'www.mercuryAB.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (3, N'StefanoA', 3, 3, N'Wroclaw ul. Zielona 4', 3, N'48 786543567', N'stefanoA@jakas_domena.pl', N'www.stefanoA.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (4, N'Burgung', 4, 4, N'Lublin ul. Barwna 6', 4, N'48 987564567', N'burgund@jakas_domena.pl', N'www.burgund.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (5, N'Zezowy', 5, 5, N'Bialystok ul. Czerwona 7', 5, N'48 987654345', N'zezowy@jakas_domena.pl', N'www.zezowy.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (6, N'Rózany', 6, 6, N'Gdansk ul. Czarna 7', 1, N'48 987675678', N'rozany@jakas_domena.pl', N'www.rozany.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (7, N'Piekny', 7, 7, N'Szczecin ul. Niebieska 7', 2, N'48 987678765', N'piekny@jakas_domena.pl', N'www.piekny.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (8, N'Wygodny', 8, 8, N'Katowice ul. Biala 8', 3, N'48 111222333', N'wygodny@jakas_domena.pl', N'www.wygodny.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (9, N'Lajkonikowy', 9, 9, N'Kraków ul. Marianny 6', 4, N'48 999888777', N'lajkonikowy@jakas_domena.pl', N'www.lajkonikowy.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (10, N'Mercy', 10, 10, N'Lyon St. Marie 6', 5, N'33 876567654', N'mercy@jakas_domena.pl', N'www.mercy.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (11, N'Beau', 11, 11, N'Marsylia St. Stefano 6', 1, N'33 987654686', N'beau@jakas_domena.pl', N'www.beau.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (12, N'Heiter', 12, 12, N'Berlin Mutestrase 4', 2, N'49 786543456', N'heiter@jakas_domena.pl', N'www.heiter.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (13, N'Komfortabel', 13, 13, N'Brema Fatastrase 5', 3, N'49 876567123', N'komfortabel@jakas_domena.pl', N'www.komfortabel.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (14, N'Wschodni', 14, 14, N'Rzeszów ul.  Bogumila 8', 4, N'48 678678654', N'wschodni@jakas_domena.pl', N'www.wschodni.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (15, N'Scyzoryk', 15, 15, N'Kielce ul. Wroclawska 67', 5, N'48 098780986', N'scyzoryk@jakas_domena.pl', N'www.scyzoryk.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (16, N'Festiwalowy', 16, 16, N'Opole ul. Poznanska78', 1, N'48 987111222', N'festiwalowy@jakas_domena.pl', N'www.festiwalowy.hotel.pl')
+INSERT [dbo].[hotele] ([hotele_id], [hotele_nazwa], [hotele_kraje_id], [hotele_miasta_id], [hotele_adres], [hotele_gwiazdki], [hotele_telefon], [hotele_email], [hotele_adres_www]) VALUES (17, N'Ekologiczny', 17, 17, N'Zielona Góra ul. Powstanców 45', 5, N'48 111444666', N'ekologiczny@jakas_domena.pl', N'www.ekologiczny.hotel.pl')
+SET IDENTITY_INSERT [dbo].[hotele] OFF
+SET IDENTITY_INSERT [dbo].[klienci] ON 
+
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (1, N'Anna', N'Nowak', 1, 1, N'Wroclawska', 33, N'DO', N'ADF', N'657876    ', N'87545645876', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (2, N'Zofia', N'Kowalska', 2, 2, N'Legnicka', 34, N'DO', N'ADG', N'765345    ', N'87698645678', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (3, N'Stefania', N'Rudecka', 3, 3, N'Kwiatowa', 78, N'DO', N'AFG', N'786543    ', N'78964567543', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (4, N'Michal', N'Lewandowski', 4, 4, N'Pilkowa', 45, N'DO', N'CFT', N'756798    ', N'68795435672', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (5, N'Jan', N'Zaniewski', 5, 5, N'Mila', 66, N'DO', N'FDS', N'675456    ', N'56782345071', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (6, N'Stefan', N'Wesolowski', 6, 6, N'Robotnicza', 23, N'DO', N'AFG', N'675345    ', N'49786523567', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (7, N'Zbigniew', N'Kaczmarek', 7, 7, N'Sejmowa', 11, N'DO', N'XYZ', N'546876    ', N'49876523564', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (8, N'Wladyslaw ', N'Jadwinski', 8, 8, N'Litewska', 23, N'DO', N'FGT', N'768986    ', N'5123459875 ', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (9, N'Stanislaw', N'Janicki', 9, 9, N'Wilenska', 45, N'DO', N'FTG', N'786456    ', N'98634563213', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (10, N'Zofia', N'Mikulska', 10, 10, N'Bernanska', 12, N'DO', N'GHY', N'786456    ', N'87645678432', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (11, N'Steven', N'Kennedy', 11, 11, N'KraffteStreet', 23, N'Paszport', N'EL', N'6785466   ', NULL, N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (12, N'Richard', N'Mercedes', 12, 12, N'Tomatenstrasse', 43, N'Paszport', N'BH', N'7684568   ', NULL, N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (13, N'Berta', N'Shmidt', 13, 13, N'Bergen strase', 10, N'Paszport', N'MT', N'6785438   ', NULL, N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (14, N'Anna', N'Mikulska', 14, 14, N'Wolna', 11, N'DO', N'AFD', N'768564    ', N'87645634562', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (15, N'Barbara', N'Opolska', 15, 15, N'Wiezienna', 65, N'Paszport', N'BG', N'7654567   ', NULL, N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (16, N'Malgorzata', N'Nowak', 16, 16, N'Szara', 78, N'DO', N'BGH', N'675643    ', N'89765434563', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (17, N'Wiktoria', N'Kowalska', 17, 17, N'Mala', 12, N'DO', N'GHY', N'786123    ', N'12345676543', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (18, N'Barbara', N'Babinicz', 2, 2, N'Jesienna', 12, N'DO', N'GHI', N'786543    ', N'56734234512', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (19, N'Zbigniew', N'Wesolowski', 3, 3, N'Zimowa', 34, N'DO', N'IUJ', N'786545    ', N'89765456342', N'm')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (20, N'Elzbieta', N'Perlica', 4, 4, N'Grabana', 33, N'DO', N'JUK', N'678543    ', N'87563451075', N'k')
+INSERT [dbo].[klienci] ([klienci_id], [klienci_imie], [klienci_nazwisko], [klienci_kraje_id], [klienci_miasta_id], [klienci_ulica], [klienci_numer_domu], [klienci_nazwa_dokumentu], [klienci_seria_dokumen], [klienci_numer_dokumentu], [klienci_numer_pesel], [klienci_plec]) VALUES (21, N'Jerzy', N'Pawlicki', 5, 2, N'Zamkowa', 45, N'DO', N'JKU', N'675435    ', N'78945187542', N'm')
+SET IDENTITY_INSERT [dbo].[klienci] OFF
+SET IDENTITY_INSERT [dbo].[kraje] ON 
+
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (1, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (2, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (3, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (4, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (5, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (6, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (7, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (8, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (9, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (10, N'Francja')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (11, N'Francja')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (12, N'Niemcy')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (13, N'Niemcy')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (14, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (15, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (16, N'Polska')
+INSERT [dbo].[kraje] ([kraje_id], [kraje_nazwa_kraju]) VALUES (17, N'Polska')
+SET IDENTITY_INSERT [dbo].[kraje] OFF
+SET IDENTITY_INSERT [dbo].[miasta] ON 
+
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (1, N'Warszawa', N'67-345', N'mazowieckie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (2, N'Poznan', N'67-564', N'wielkopolskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (3, N'Wroclaw', N'54-567', N'dolnoslaskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (4, N'Lublin', N'67-678', N'lubelskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (5, N'Bialystok', N'67-098', N'podlaskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (6, N'Gdansk', N'12-543', N'pomorskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (7, N'Szczecin', N'45-765', N'zachodniopomorskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (8, N'Katowice', N'67-098', N'slaskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (9, N'Kraków', N'54-876', N'malopolskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (10, N'Lyon', N'69002', N'RhoneAlpes')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (11, N'Marsylia', N'789878', N'Prowansja Alpy')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (12, N'Berlin', N'10178', N'Brandenburgia')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (13, N'Brema', N'28195', N'Dolna Saksonia')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (14, N'Rzeszów', N'56-678', N'podkarpackie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (15, N'Kielce', N'56-765', N'swietokrzyskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (16, N'Opole', N'14-786', N'opolskie')
+INSERT [dbo].[miasta] ([miasta_id], [miasta_nazwa], [miasta_kod_pocztowy], [miasta_wojewodztwo]) VALUES (17, N'Zielona Góra', N'23-098', N'lubuskie')
+SET IDENTITY_INSERT [dbo].[miasta] OFF
+SET IDENTITY_INSERT [dbo].[parking] ON 
+
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (1, 1, 34)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (2, 2, 56)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (3, 3, 45)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (4, 4, 23)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (5, 5, 86)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (6, 6, 67)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (7, 7, 67)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (8, 8, 43)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (9, 9, 90)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (10, 10, 76)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (11, 11, 89)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (12, 12, 56)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (13, 13, 65)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (14, 14, 110)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (15, 15, 20)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (16, 16, 30)
+INSERT [dbo].[parking] ([parking_id], [parking_hotele_id], [parking_liczba]) VALUES (17, 17, 55)
+SET IDENTITY_INSERT [dbo].[parking] OFF
+SET IDENTITY_INSERT [dbo].[pokoje] ON 
+
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (1, 1, 1, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (2, 2, 2, 2, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (3, 3, 3, 3, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (4, 4, 4, 4, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (5, 5, 5, 5, 1)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (6, 6, 6, 6, 1)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (7, 7, 7, 7, 1)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (8, 8, 8, 8, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (9, 9, 9, 9, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (10, 10, 10, 10, 3)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (11, 11, 11, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (12, 12, 12, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (13, 13, 13, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (14, 14, 14, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (15, 15, 15, 2, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (16, 16, 16, 1, 2)
+INSERT [dbo].[pokoje] ([pokoje_id], [pokoje_hotele_id], [pokoje_numer], [pokoje_pietro], [pokoje_ludzie]) VALUES (17, 17, 17, 2, 3)
+SET IDENTITY_INSERT [dbo].[pokoje] OFF
+SET IDENTITY_INSERT [dbo].[rezerwacje] ON 
+
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (19, 19, CAST(N'2019-12-14' AS Date), CAST(N'2019-12-16' AS Date), 8, 8, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (8, 8, CAST(N'2019-12-13' AS Date), CAST(N'2019-12-13' AS Date), 8, 8, 0)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (2, 2, CAST(N'2019-12-12' AS Date), CAST(N'2019-12-16' AS Date), 1, 2, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (7, 7, CAST(N'2019-12-08' AS Date), CAST(N'2019-12-19' AS Date), 7, 7, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (6, 6, CAST(N'2019-12-08' AS Date), CAST(N'2019-12-18' AS Date), 6, 6, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (9, 9, CAST(N'2019-11-29' AS Date), CAST(N'2019-12-04' AS Date), 9, 9, 0)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (1, 1, CAST(N'2019-11-28' AS Date), CAST(N'2019-12-31' AS Date), 2, 1, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (10, 10, CAST(N'2019-11-20' AS Date), CAST(N'2019-12-30' AS Date), 10, 10, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (4, 4, CAST(N'2019-11-15' AS Date), CAST(N'2019-12-18' AS Date), 4, 4, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (3, 3, CAST(N'2019-10-31' AS Date), CAST(N'2019-11-10' AS Date), 3, 3, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (5, 5, CAST(N'2019-10-17' AS Date), CAST(N'2019-10-25' AS Date), 5, 5, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (14, 14, CAST(N'2019-10-15' AS Date), CAST(N'2019-10-19' AS Date), 14, 14, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (13, 13, CAST(N'2019-10-10' AS Date), CAST(N'2019-10-12' AS Date), 13, 13, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (20, 20, CAST(N'2019-10-01' AS Date), CAST(N'2019-10-03' AS Date), 1, 1, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (17, 17, CAST(N'2019-09-25' AS Date), CAST(N'2019-09-27' AS Date), 17, 17, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (15, 15, CAST(N'2019-09-20' AS Date), CAST(N'2019-09-25' AS Date), 15, 15, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (18, 18, CAST(N'2019-09-08' AS Date), CAST(N'2019-09-10' AS Date), 9, 9, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (21, 21, CAST(N'2019-09-01' AS Date), CAST(N'2019-09-03' AS Date), 7, 7, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (12, 12, CAST(N'2019-08-20' AS Date), CAST(N'2019-09-02' AS Date), 12, 12, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (11, 11, CAST(N'2019-08-09' AS Date), CAST(N'2019-08-20' AS Date), 11, 11, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (16, 16, CAST(N'2019-07-23' AS Date), CAST(N'2019-07-28' AS Date), 16, 16, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (23, 20, CAST(N'2019-04-01' AS Date), CAST(N'2019-04-05' AS Date), 1, 1, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (24, 19, CAST(N'2019-03-05' AS Date), CAST(N'2019-03-09' AS Date), 3, NULL, 1)
+INSERT [dbo].[rezerwacje] ([rezerwacje_id], [rezerwacje_klienci_id], [rezerwacje_zameldowanie], [rezerwacje_wymeldowanie], [rezerwacje_pokoje_id], [rezerwacje_parking_id], [rezerwacje_czy_zrealizowano]) VALUES (22, 21, CAST(N'2019-03-01' AS Date), CAST(N'2019-03-05' AS Date), 8, 8, 1)
+SET IDENTITY_INSERT [dbo].[rezerwacje] OFF
+/****** Object:  Index [Hotele]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [Hotele] ON [dbo].[hotele]
+(
+	[hotele_miasta_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [NonClusteredIndex-20191222-112143]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [NonClusteredIndex-20191222-112143] ON [dbo].[hotele]
+(
+	[hotele_nazwa] ASC,
+	[hotele_miasta_id] ASC,
+	[hotele_gwiazdki] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [NonClusteredIndex-20191222-111300]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [NonClusteredIndex-20191222-111300] ON [dbo].[klienci]
+(
+	[klienci_imie] ASC,
+	[klienci_nazwisko] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [NonClusteredIndex-20191222-112031]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [NonClusteredIndex-20191222-112031] ON [dbo].[pokoje]
+(
+	[pokoje_hotele_id] ASC,
+	[pokoje_numer] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [Pokoje]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [Pokoje] ON [dbo].[pokoje]
+(
+	[pokoje_hotele_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [NonClusteredIndex-20191222-111434]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [NonClusteredIndex-20191222-111434] ON [dbo].[rezerwacje]
+(
+	[rezerwacje_zameldowanie] DESC,
+	[rezerwacje_wymeldowanie] DESC
+)
+INCLUDE([rezerwacje_klienci_id],[rezerwacje_pokoje_id],[rezerwacje_parking_id],[rezerwacje_czy_zrealizowano]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [Rezerwacje1]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [Rezerwacje1] ON [dbo].[rezerwacje]
+(
+	[rezerwacje_czy_zrealizowano] DESC
+)
+INCLUDE([rezerwacje_klienci_id],[rezerwacje_zameldowanie],[rezerwacje_wymeldowanie]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [Rezerwacje2]    Script Date: 22/12/2019 12:21:20 ******/
+CREATE NONCLUSTERED INDEX [Rezerwacje2] ON [dbo].[rezerwacje]
+(
+	[rezerwacje_klienci_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[hotele]  WITH CHECK ADD  CONSTRAINT [fk_hotele_kraje] FOREIGN KEY([hotele_kraje_id])
+REFERENCES [dbo].[kraje] ([kraje_id])
+GO
+ALTER TABLE [dbo].[hotele] CHECK CONSTRAINT [fk_hotele_kraje]
+GO
+ALTER TABLE [dbo].[hotele]  WITH CHECK ADD  CONSTRAINT [fk_hotele_miasta] FOREIGN KEY([hotele_miasta_id])
+REFERENCES [dbo].[miasta] ([miasta_id])
+GO
+ALTER TABLE [dbo].[hotele] CHECK CONSTRAINT [fk_hotele_miasta]
+GO
+ALTER TABLE [dbo].[pokoje]  WITH CHECK ADD  CONSTRAINT [fk_pokoje_hotele] FOREIGN KEY([pokoje_hotele_id])
+REFERENCES [dbo].[hotele] ([hotele_id])
+GO
+ALTER TABLE [dbo].[pokoje] CHECK CONSTRAINT [fk_pokoje_hotele]
+GO
+ALTER TABLE [dbo].[rezerwacje]  WITH CHECK ADD  CONSTRAINT [fk_rezerwacje_klienci] FOREIGN KEY([rezerwacje_klienci_id])
+REFERENCES [dbo].[klienci] ([klienci_id])
+GO
+ALTER TABLE [dbo].[rezerwacje] CHECK CONSTRAINT [fk_rezerwacje_klienci]
+GO
+ALTER TABLE [dbo].[rezerwacje]  WITH CHECK ADD  CONSTRAINT [fk_rezerwacje_parking] FOREIGN KEY([rezerwacje_parking_id])
+REFERENCES [dbo].[parking] ([parking_id])
+GO
+ALTER TABLE [dbo].[rezerwacje] CHECK CONSTRAINT [fk_rezerwacje_parking]
+GO
+ALTER TABLE [dbo].[rezerwacje]  WITH CHECK ADD  CONSTRAINT [fk_rezerwacje_pokoje] FOREIGN KEY([rezerwacje_pokoje_id])
+REFERENCES [dbo].[pokoje] ([pokoje_id])
+GO
+ALTER TABLE [dbo].[rezerwacje] CHECK CONSTRAINT [fk_rezerwacje_pokoje]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[32] 4[10] 2[3] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = -576
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "RE"
+            Begin Extent = 
+               Top = 23
+               Left = 490
+               Bottom = 220
+               Right = 832
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "P"
+            Begin Extent = 
+               Top = 0
+               Left = 30
+               Bottom = 197
+               Right = 283
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "H"
+            Begin Extent = 
+               Top = 272
+               Left = 497
+               Bottom = 469
+               Right = 762
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "K"
+            Begin Extent = 
+               Top = 312
+               Left = 52
+               Bottom = 455
+               Right = 310
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "M"
+            Begin Extent = 
+               Top = 554
+               Left = 34
+               Bottom = 751
+               Right = 328
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 12
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'zlozone'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'zlozone'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'zlozone'
+GO
+USE [master]
+GO
+ALTER DATABASE [Hotele_Gabi] SET  READ_WRITE 
+GO
