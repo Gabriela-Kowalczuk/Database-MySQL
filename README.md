@@ -5,11 +5,17 @@ Base composition:
 1. The Hotele_Gabi database consists of 7 tables:
 
 • Clients (containing information: name, surname, country, city, streets, house number, name of the document (it can be a passport, if the client does not have an ID card), series of documents (if he has a document, then series of evidence, if he has no passport number), document number (6-digit ID card number or passport number), PESEL number (11-digit PESEL number is optional because only Polish customers have a PESEL number and the database should be adapted to all customers) number, series, name of the identity document are obligatory ie passport or ID card There is also a gender column in the database, in the hotel, determining the gender helps to divide customers into rooms, who come as a group, a trip, etc .: women want to be alone in the room, men alone.
+
 • Rooms, defines the room in which the client lives, i.e. the room numbers and the floor-number, the type of room people, e.g. value 2 means double
+
 • Reservations, the table contains information about reservations made from when (check-in) and until (check-out), information whether the reservation has been made
+
 • Hotels, there are several hotels in one country, hotels are located in many countries,
+
 • Parking, determines how many parking spaces a given hotel has, each parking lot of a given hotel is assigned to the client who sleeps in it.
+
 • Cities, hotels are in some city, but customers also live in some city, so I put the cities in a separate table and included foreign keys;
+
 • Countries, there are several hotels in one country, but clients also have their own country of residence, I have put the names of the countries in a separate table.
 
 2. Relationships between entities:
@@ -31,6 +37,7 @@ Provides information on people currently staying in hotels.
 Check which client lives in which hotel, in which country and how many stars the hotels have
 
 4. Sample database queries:
+
 • Lists hotels by number of reservations and arranges them in descending order
 	
 	SELECT
