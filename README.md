@@ -30,6 +30,7 @@ Check which client lives in which hotel, in which country and how many stars the
 
 4. Sample database queries:
 • Lists hotels by number of reservations and arranges them in descending order:
+	
 	SELECT
      	H.hotele_nazwa
     	,COUNT(*) AS [Liczba rezerwacji]
@@ -42,11 +43,9 @@ Check which client lives in which hotel, in which country and how many stars the
 	ORDER BY
     	2 DESC
  
-
-
- 
  • Selects those hotels with 3 to 5 stars inclusive from the table   
-    	SELECT
+    	
+	SELECT
      H.hotele_nazwa AS Nazwa
     	,H.hotele_adres AS Adres
     	,H.hotele_telefon AS Telefon
