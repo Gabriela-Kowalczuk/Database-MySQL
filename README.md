@@ -30,30 +30,31 @@ Check which client lives in which hotel, in which country and how many stars the
 
 4. Sample database queries:
 • Lists hotels by number of reservations and arranges them in descending order:
-
-SELECT
-     H.hotele_nazwa
-    ,COUNT(*) AS [Liczba rezerwacji]
-FROM
-    hotele H
-    JOIN pokoje P ON H.hotele_id = P.pokoje_hotele_id
-    JOIN rezerwacje RE ON P.pokoje_id = RE.rezerwacje_pokoje_id        
-GROUP BY
-    H.hotele_nazwa
-ORDER BY
-    2 DESC
+	SELECT
+     	H.hotele_nazwa
+    	,COUNT(*) AS [Liczba rezerwacji]
+	FROM
+    	hotele H
+   	 JOIN pokoje P ON H.hotele_id = P.pokoje_hotele_id
+    	JOIN rezerwacje RE ON P.pokoje_id = RE.rezerwacje_pokoje_id        
+	GROUP BY
+   	 H.hotele_nazwa
+	ORDER BY
+    	2 DESC
  
+
+
  
  • Selects those hotels with 3 to 5 stars inclusive from the table   
-    SELECT
+    	SELECT
      H.hotele_nazwa AS Nazwa
-    ,H.hotele_adres AS Adres
-    ,H.hotele_telefon AS Telefon
+    	,H.hotele_adres AS Adres
+    	,H.hotele_telefon AS Telefon
 	,H.hotele_gwiazdki AS gwiazdki
-FROM
+	FROM
     HOTELE H
-WHERE
-    H.hotele_gwiazdki >= 3 AND H.hotele_gwiazdki <= 5
+	WHERE
+    	H.hotele_gwiazdki >= 3 AND H.hotele_gwiazdki <= 5
     
  • Shows which country has the most hotels by calculating the percentage of hotels in a given country to all hotels in the database and sorted in descending order.
  
@@ -63,15 +64,15 @@ WHERE
             COUNT(*)
         FROM    
             hotele)   
-SELECT
+	SELECT
      K.kraje_nazwa_kraju AS Kraj
     ,CAST(COUNT(*)*100/@ile_hoteli AS NUMERIC(4,2)) AS [%]
-FROM
+	FROM
     hotele H
     JOIN kraje K ON H.hotele_kraje_id = K.kraje_id    
-GROUP BY
+	GROUP BY
     K.kraje_nazwa_kraju
-ORDER BY
+	ORDER BY
     2 DESC 
     
     
